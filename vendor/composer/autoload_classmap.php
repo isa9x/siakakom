@@ -83,6 +83,7 @@ return array(
     'Hamcrest\\Type\\IsString' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
     'Hamcrest\\Util' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
     'Hamcrest\\Xml\\HasXPath' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+    'HargaInventarisSeeder' => $baseDir . '/database/seeds/HargaInventarisSeeder.php',
     'JenisBarangTableSeeder' => $baseDir . '/database/seeds/JenisBarangTableSeeder.php',
     'LaratrustSetupTables' => $baseDir . '/database/migrations/2016_12_25_153003_laratrust_setup_tables.php',
     'Laratrust\\AddLaratrustUserTraitUseCommand' => $vendorDir . '/santigarcor/laratrust/src/commands/AddLaratrustUserTraitUseCommand.php',

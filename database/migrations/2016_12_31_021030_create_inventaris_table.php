@@ -17,7 +17,7 @@ class CreateInventarisTable extends Migration
             $table->increments('id');
             $table->string('nama');
             $table->unsignedInteger('id_jenis_barang');
-            $table->enum('status', ['continued', 'discontinued']);
+            $table->enum('status', ['continued', 'discontinued','inden']);
             $table->timestamps();
 
             $table->foreign('id_jenis_barang')->references('id')->on('jenis_barang')

@@ -374,6 +374,7 @@ class ComposerStaticInit19563ab5f7c812641600cc9e700baa83
         'Hamcrest\\Type\\IsString' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Type/IsString.php',
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
+        'HargaInventarisSeeder' => __DIR__ . '/../..' . '/database/seeds/HargaInventarisSeeder.php',
         'JenisBarangTableSeeder' => __DIR__ . '/../..' . '/database/seeds/JenisBarangTableSeeder.php',
         'LaratrustSetupTables' => __DIR__ . '/../..' . '/database/migrations/2016_12_25_153003_laratrust_setup_tables.php',
         'Laratrust\\AddLaratrustUserTraitUseCommand' => __DIR__ . '/..' . '/santigarcor/laratrust/src/commands/AddLaratrustUserTraitUseCommand.php',
