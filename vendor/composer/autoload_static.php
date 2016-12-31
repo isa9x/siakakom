@@ -297,6 +297,8 @@ class ComposerStaticInit19563ab5f7c812641600cc9e700baa83
     );
 
     public static $classMap = array (
+        'CreateHargaStokTable' => __DIR__ . '/../..' . '/database/migrations/2016_12_31_022103_create_harga_stok_table.php',
+        'CreateInventarisTable' => __DIR__ . '/../..' . '/database/migrations/2016_12_31_021030_create_inventaris_table.php',
         'CreateJenisBarangTable' => __DIR__ . '/../..' . '/database/migrations/2016_12_23_152123_create_jenis_barang_table.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
         'CreateUsersTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_000000_create_users_table.php',
@@ -373,6 +375,7 @@ class ComposerStaticInit19563ab5f7c812641600cc9e700baa83
         'Hamcrest\\Util' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
         'Hamcrest\\Xml\\HasXPath' => __DIR__ . '/..' . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
         'JenisBarangTableSeeder' => __DIR__ . '/../..' . '/database/seeds/JenisBarangTableSeeder.php',
+        'LaratrustSetupTables' => __DIR__ . '/../..' . '/database/migrations/2016_12_25_153003_laratrust_setup_tables.php',
         'Laratrust\\AddLaratrustUserTraitUseCommand' => __DIR__ . '/..' . '/santigarcor/laratrust/src/commands/AddLaratrustUserTraitUseCommand.php',
         'Laratrust\\MakePermissionCommand' => __DIR__ . '/..' . '/santigarcor/laratrust/src/commands/MakePermissionCommand.php',
         'Laratrust\\MakeRoleCommand' => __DIR__ . '/..' . '/santigarcor/laratrust/src/commands/MakeRoleCommand.php',

@@ -6,6 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'CreateHargaStokTable' => $baseDir . '/database/migrations/2016_12_31_022103_create_harga_stok_table.php',
+    'CreateInventarisTable' => $baseDir . '/database/migrations/2016_12_31_021030_create_inventaris_table.php',
     'CreateJenisBarangTable' => $baseDir . '/database/migrations/2016_12_23_152123_create_jenis_barang_table.php',
     'CreatePasswordResetsTable' => $baseDir . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',
     'CreateUsersTable' => $baseDir . '/database/migrations/2014_10_12_000000_create_users_table.php',
@@ -82,6 +84,7 @@ return array(
     'Hamcrest\\Util' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Util.php',
     'Hamcrest\\Xml\\HasXPath' => $vendorDir . '/hamcrest/hamcrest-php/hamcrest/Hamcrest/Xml/HasXPath.php',
     'JenisBarangTableSeeder' => $baseDir . '/database/seeds/JenisBarangTableSeeder.php',
+    'LaratrustSetupTables' => $baseDir . '/database/migrations/2016_12_25_153003_laratrust_setup_tables.php',
     'Laratrust\\AddLaratrustUserTraitUseCommand' => $vendorDir . '/santigarcor/laratrust/src/commands/AddLaratrustUserTraitUseCommand.php',
     'Laratrust\\MakePermissionCommand' => $vendorDir . '/santigarcor/laratrust/src/commands/MakePermissionCommand.php',
     'Laratrust\\MakeRoleCommand' => $vendorDir . '/santigarcor/laratrust/src/commands/MakeRoleCommand.php',
