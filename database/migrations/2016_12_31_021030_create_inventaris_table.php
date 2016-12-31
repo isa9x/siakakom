@@ -16,9 +16,12 @@ class CreateInventarisTable extends Migration
         Schema::create('inventaris', function (Blueprint $table) {
             $table->increments('id');
             $table->string('nama');
-            $table->integer('id_jenis');
+            $table->unsignedInteger('id_jenis_barang');
             $table->enum('status', ['continued', 'discontinued']);
             $table->timestamps();
+
+            $table->foreign('id_jenis_barang')->references('id')->on('jenis_barang')
+                ->onUpdate('cascade');
         });
     }
 

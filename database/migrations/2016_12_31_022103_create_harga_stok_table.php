@@ -15,7 +15,15 @@ class CreateHargaStokTable extends Migration
     {
         Schema::create('harga_stok', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('id_inventaris');
+            $table->integer('modal');
+            $table->integer('jual');
+            $table->integer('stok');
+            $table->integer('terjual');
             $table->timestamps();
+
+            $table->foreign('id_inventaris')->references('id')->on('inventaris')
+                ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
