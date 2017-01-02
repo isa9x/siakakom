@@ -14,7 +14,7 @@
 					</div>
 
 					<div class="panel-body">
-					Diisi dengan DataTable
+					Diisi dengan DataTable untuk inventaris
 					</div>
 				</div>
 			</div>
