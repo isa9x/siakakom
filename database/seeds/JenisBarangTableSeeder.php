@@ -11,6 +11,7 @@ class JenisBarangTableSeeder extends Seeder
      */
     public function run()
     {
+        //seeder jenis barang
         $jenis_barang=[
         	['nama'=>'ATK'],
         	['nama'=>'Accessories'],
