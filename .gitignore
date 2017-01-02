@@ -5,3 +5,7 @@ Homestead.json
 Homestead.yaml
 .env
 *.md
+<<<<<<< HEAD
+=======
+README.md
+>>>>>>> origin/master
