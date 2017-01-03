@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Inventaris;
+use Yajra\Datatables\Html\Builder;
+use Yajra\Datatables\Datatables;
 
 class InventarisController extends Controller
 {
@@ -12,9 +15,16 @@ class InventarisController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request, Builder $htmlBuilder)
     {
-        return view('inventaris.index');
+        if($request->ajax()){
+            $inventaris=Inventaris::select(['id','nama']);
+            return Datatables::of($inventaris)->make(true);
+        }
+
+        $html = $htmlBuilder->addColumn(['data'=>'nama','name'=>'nama', 'title'=>'Nama']);
+
+        return view('inventaris.index')->with(compact('html'));
     }
 
     /**
