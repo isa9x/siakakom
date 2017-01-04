@@ -5,24 +5,23 @@
 			<div class="col-md-12">
 				<ul class="breadcrumb">
 					<li><a href="{{ url('/home') }}">Dashboard</a></li>
-					<li class="active">Inventaris</li>
+					<li><a href="{{ url('/admin/authors') }}">Inventaris</a></li>
+					<li class="active">Tambah Inventaris</li>
 				</ul>
-				
+
 				<div class="panel panel-default">
 					<div class="panel-heading">
-					<h2 class="panel-title">Inventaris</h2>
+						<h2 class="panel-title">Tambah Inventaris</h2>
 					</div>
 
 					<div class="panel-body">
-						<p> <a class="btn btn-primary" href="{{ route('inventaris.create') }}">Tambah</a> </p>
-						{!! $html->table(['class'=>'table-striped']) !!}
+						{!! Form::open(['url' => route('inventaris.store'),'method' => 'post', 'class'=>'form-horizontal']) !!}
+
+							@include('inventaris._form')
+						{!! Form::close() !!}
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-@endsection
-
-@section('scripts')
-	{!! $html->scripts() !!}
 @endsection

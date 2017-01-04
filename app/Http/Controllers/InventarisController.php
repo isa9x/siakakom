@@ -23,7 +23,6 @@ class InventarisController extends Controller
         }
 
         $html = $htmlBuilder->addColumn(['data'=>'nama','name'=>'nama', 'title'=>'Nama']);
-
         return view('inventaris.index')->with(compact('html'));
     }
 
@@ -34,7 +33,7 @@ class InventarisController extends Controller
      */
     public function create()
     {
-        //
+        return view('inventaris.create');
     }
 
     /**
@@ -45,7 +44,10 @@ class InventarisController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, ['nama' => 'required']);
+        $author = Author::create($request->all());
+        return redirect()->route('authors.index');
+
     }
 
     /**
