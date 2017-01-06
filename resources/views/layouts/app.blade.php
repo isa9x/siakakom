@@ -13,6 +13,7 @@
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
     <link href="/css/jquery.dataTables.css" rel="stylesheet">
+    <link href="/css/selectize.css" rel="stylesheet">
     <link href="/css/dataTables.bootstrap.css" rel="stylesheet">
 ....
     <!-- Scripts -->
@@ -89,6 +90,7 @@
     <!-- Scripts -->
     <script src="/js/app.js"></script>
     <script src="/js/jquery.dataTables.min.js"></script>
+    <script src="/js/selectize.min.js"></script>
     <script src="/js/dataTables.bootstrap.min.js"></script>
 </body>
 @yield('scripts')

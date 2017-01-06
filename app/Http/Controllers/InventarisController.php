@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Inventaris;
+use App\HargaStok;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 
@@ -23,7 +24,6 @@ class InventarisController extends Controller
         }
 
         $html = $htmlBuilder->addColumn(['data'=>'nama','name'=>'nama', 'title'=>'Nama']);
-
         return view('inventaris.index')->with(compact('html'));
     }
 
@@ -34,7 +34,7 @@ class InventarisController extends Controller
      */
     public function create()
     {
-        //
+        return view('inventaris.create');
     }
 
     /**
@@ -45,7 +45,32 @@ class InventarisController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, 
+            ['nama' => 'required',
+             'id_jenis_barang' => 'required|min:1|numeric',
+             'modal' => 'required|numeric',
+             'jual' => 'required|numeric',
+             'stok' => 'required|numeric',
+            ]
+
+        );
+
+        $inventaris = Inventaris::create([
+                'nama' => $request->nama,
+                'id_jenis_barang' => $request->id_jenis_barang,
+                'status' => 'Continued'
+        ]);
+
+        $hargastok = HargaStok::create([
+                'id_inventaris' => $inventaris->id,
+                'modal' => $request->modal,
+                'jual' => $request->jual,
+                'stok' => $request->stok,
+                'terjual'=>0
+        ]);
+
+        return redirect()->route('inventaris.index');
+
     }
 
     /**

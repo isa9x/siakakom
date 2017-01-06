@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Inventaris extends Model
 {
-    protected $table = ['jenis_barang'];
+    protected $table = 'inventaris';
 
     protected $fillable = [
-        'nama', 'id_jenis', 'status'
+        'nama', 'id_jenis_barang', 'status'
     ];
 
     public function jenisBarang()
