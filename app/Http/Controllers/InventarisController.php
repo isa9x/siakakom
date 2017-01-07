@@ -8,6 +8,7 @@ use App\Inventaris;
 use App\HargaStok;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
+use Session;
 
 class InventarisController extends Controller
 {
@@ -46,7 +47,7 @@ class InventarisController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, 
-            ['nama' => 'required',
+            ['nama' => 'required|unique:inventaris',
              'id_jenis_barang' => 'required|min:1|numeric',
              'modal' => 'required|numeric',
              'jual' => 'required|numeric',
@@ -67,6 +68,11 @@ class InventarisController extends Controller
                 'jual' => $request->jual,
                 'stok' => $request->stok,
                 'terjual'=>0
+        ]);
+
+        Session::flash("flash_notification", [
+            "level"=>"success",
+            "message"=>"Berhasil menyimpan $inventaris->nama"
         ]);
 
         return redirect()->route('inventaris.index');
