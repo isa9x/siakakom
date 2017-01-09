@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Inventaris;
 use App\HargaStok;
+use App\JenisBarang;
 use Yajra\Datatables\Html\Builder;
 use Yajra\Datatables\Datatables;
 use Session;
@@ -122,5 +123,13 @@ class InventarisController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function test()
+    {
+        $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
+                ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
+
+        return view('inventaris.test')->with(compact('query'));
     }
 }
