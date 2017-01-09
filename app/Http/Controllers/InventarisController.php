@@ -21,11 +21,17 @@ class InventarisController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if($request->ajax()){
-            $inventaris=Inventaris::select(['id','nama']);
-            return Datatables::of($inventaris)->make(true);
+            $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
+                ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
+
+            return Datatables::of($query)->make(true);
         }
 
-        $html = $htmlBuilder->addColumn(['data'=>'nama','name'=>'nama', 'title'=>'Nama']);
+        $html = $htmlBuilder
+            ->addColumn(['data'=>'nama','name'=>'nama', 'title'=>'Nama'])
+            ->addColumn(['data'=>'jenis','name'=>'jenis','title'=>'Jenis Barang'])
+            ->addColumn(['data'=>'modal','name'=>'modal','title'=>'Harga Modal'])
+            ->addColumn(['data'=>'jual','name'=>'jual','title'=>'Harga Jual']);
         return view('inventaris.index')->with(compact('html'));
     }
 
@@ -125,11 +131,11 @@ class InventarisController extends Controller
         //
     }
 
-    public function test()
-    {
-        $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
-                ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
+    // public function test()
+    // {
+    //     $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
+    //             ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
 
-        return view('inventaris.test')->with(compact('query'));
-    }
+    //     return view('inventaris.test')->with(compact('query'));
+    // }
 }
