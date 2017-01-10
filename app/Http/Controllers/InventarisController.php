@@ -24,14 +24,20 @@ class InventarisController extends Controller
             $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
                 ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
 
-            return Datatables::of($query)->make(true);
+            return Datatables::of($query)
+                ->addColumn('sisa_stok',function($query){
+                    $sisa = $query->stok - $query->terjual;
+                    return $sisa;
+                })
+            ->make(true);
         }
 
         $html = $htmlBuilder
             ->addColumn(['data'=>'nama','name'=>'nama', 'title'=>'Nama'])
             ->addColumn(['data'=>'jenis','name'=>'jenis','title'=>'Jenis Barang'])
             ->addColumn(['data'=>'modal','name'=>'modal','title'=>'Harga Modal'])
-            ->addColumn(['data'=>'jual','name'=>'jual','title'=>'Harga Jual']);
+            ->addColumn(['data'=>'jual','name'=>'jual','title'=>'Harga Jual'])
+            ->addColumn(['data'=>'sisa_stok','name'=>'sisa_stok','title'=>'Stok Tersedia']);
         return view('inventaris.index')->with(compact('html'));
     }
 
@@ -94,7 +100,8 @@ class InventarisController extends Controller
      */
     public function show($id)
     {
-        //
+        $barang=Inventaris::findOrFail($id);
+        return view('inventaris.show',compact('barang'));
     }
 
     /**

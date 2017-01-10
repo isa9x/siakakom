@@ -15,7 +15,6 @@
     <link href="/css/jquery.dataTables.css" rel="stylesheet">
     <link href="/css/selectize.css" rel="stylesheet">
     <link href="/css/dataTables.bootstrap.css" rel="stylesheet">
-....
     <!-- Scripts -->
     <script>
         window.Laravel = <?php echo json_encode([
