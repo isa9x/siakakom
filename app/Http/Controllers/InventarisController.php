@@ -147,11 +147,22 @@ class InventarisController extends Controller
         //
     }
 
-    // public function test()
-    // {
-    //     $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
-    //             ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
+    public function test()
+    {
+        // select * from inventaris join (
+            //     select * from harga_stok
+            //     where modal in (
+            //         select max(modal) from harga_stok group by id_inventaris
+            //     )
+            // ) as most_modal
+            // on inventaris.id = most_modal.id_inventaris
 
-    //     return view('inventaris.test')->with(compact('query'));
-    // }
+             // $query1 = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
+             //    ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
+             
+             $query=HargaStok::max('modal')->get();
+             // $query2=HargaStok::
+
+        return view('inventaris.test')->with(compact('query'));
+    }
 }
