@@ -29,8 +29,8 @@ class InventarisController extends Controller
             //     )
             // ) as most_modal
             // on inventaris.id = most_modal.id_inventaris
-            
-            $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
+
+             $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
                 ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
 
             return Datatables::of($query)
