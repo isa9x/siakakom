@@ -21,6 +21,15 @@ class InventarisController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if($request->ajax()){
+
+            // select * from inventaris join (
+            //     select * from harga_stok
+            //     where modal in (
+            //         select max(modal) from harga_stok group by id_inventaris
+            //     )
+            // ) as most_modal
+            // on inventaris.id = most_modal.id_inventaris
+            
             $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
                 ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
 
