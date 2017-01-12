@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Inventaris;
 use App\HargaStok;
@@ -150,18 +151,25 @@ class InventarisController extends Controller
     public function test()
     {
         // select * from inventaris join (
+        //         select * from harga_stok
+        //         where modal in (
+        //             select max(modal) from harga_stok group by id_inventaris
+        //         )
+        //     ) as most_modal
+        //     on inventaris.id = most_modal.id_inventaris
+
+             // $query1 = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
+             //    ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
+             
+            // $query=DB::raw('select * from inventaris join (
             //     select * from harga_stok
             //     where modal in (
             //         select max(modal) from harga_stok group by id_inventaris
             //     )
             // ) as most_modal
-            // on inventaris.id = most_modal.id_inventaris
+            // on inventaris.id = most_modal.id_inventaris');
 
-             // $query1 = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
-             //    ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
-             
-             $query=HargaStok::max('modal')->get();
-             // $query2=HargaStok::
+            $query=Inventaris::join(DB::raw('SELECT * FROM harga_stok WHERE modal = (SELECT MAX(modal) FROM harga_stok GROUP BY id_inventaris) AS most_modal'),'inventaris.id','=','most_modal.id_inventaris')->get();
 
         return view('inventaris.test')->with(compact('query'));
     }
