@@ -22,22 +22,17 @@ class InventarisController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if($request->ajax()){
-
-            // select * from inventaris join (
-            //     select * from harga_stok
-            //     where modal in (
-            //         select max(modal) from harga_stok group by id_inventaris
-            //     )
-            // ) as most_modal
-            // on inventaris.id = most_modal.id_inventaris
-
-             $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
-                ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
-
+            $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
+                    ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();;
+            
             return Datatables::of($query)
                 ->addColumn('sisa_stok',function($query){
                     $sisa = $query->stok - $query->terjual;
                     return $sisa;
+                })->addColumn('action', function($query){
+                        return view('datatable._action', [
+                        'show_url' => route('inventaris.show', $query->id),
+                    ]);
                 })
             ->make(true);
         }
@@ -47,7 +42,9 @@ class InventarisController extends Controller
             ->addColumn(['data'=>'jenis','name'=>'jenis','title'=>'Jenis Barang'])
             ->addColumn(['data'=>'modal','name'=>'modal','title'=>'Harga Modal'])
             ->addColumn(['data'=>'jual','name'=>'jual','title'=>'Harga Jual'])
-            ->addColumn(['data'=>'sisa_stok','name'=>'sisa_stok','title'=>'Stok Tersedia']);
+            ->addColumn(['data'=>'sisa_stok','name'=>'sisa_stok','title'=>'Stok Tersedia'])
+            ->addColumn(['data' => 'action', 'name'=>'action', 'title'=>'', 'orderable'=>'false', 'searchable'=>'false']);
+
         return view('inventaris.index')->with(compact('html'));
     }
 
@@ -150,34 +147,20 @@ class InventarisController extends Controller
 
     public function test()
     {
-        //Ini query yang nak di pake
-
-        // select * from inventaris join (
-        //         select * from harga_stok
-        //         where modal in (
-        //             select max(modal) from harga_stok group by id_inventaris
-        //         )
-        //     ) as most_modal
-        //     on inventaris.id = most_modal.id_inventaris
-
             // Ini bukan, ini query lamo 
 
-             // $query1 = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
-             //    ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
-             
-         //ini  kalo dijalanke biso, tp katek isi, men dipake ke ->get(), error, cannot call function get() to integer men dak salah
-     
+             // $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
+             //     ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
+            
+        //berhasil
         $query=DB::select(DB::raw('select * from inventaris join (
             select * from harga_stok
-            where modal in (
-                select max(modal) from harga_stok group by id_inventaris
-            )
-        ) as most_modal
-        on inventaris.id = most_modal.id_inventaris'));
-
-            //nah yang dibawah ini error MariaDB near Group bla bla, help plss
-
-            // $query=DB::select(DB::raw('SELECT * FROM harga_stok WHERE modal = (SELECT MAX(modal) FROM harga_stok GROUP BY id_inventaris) AS most_modal'),'inventaris.id','=','most_modal.id_inventaris')->get();
+                    where modal in (
+                        select max(modal) from harga_stok where stok - terjual <> 0 group by id_inventaris
+                    )
+                ) as most_modal
+                on inventaris.id = most_modal.id_inventaris
+            join jenis_barang on inventaris.id_jenis_barang = jenis_barang.id'));
 
         return view('inventaris.test')->with(compact('query'));
     }
