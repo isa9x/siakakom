@@ -150,6 +150,8 @@ class InventarisController extends Controller
 
     public function test()
     {
+        //Ini query yang nak di pake
+
         // select * from inventaris join (
         //         select * from harga_stok
         //         where modal in (
@@ -158,18 +160,24 @@ class InventarisController extends Controller
         //     ) as most_modal
         //     on inventaris.id = most_modal.id_inventaris
 
+            // Ini bukan, ini query lamo 
+
              // $query1 = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
              //    ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
              
-            // $query=DB::raw('select * from inventaris join (
-            //     select * from harga_stok
-            //     where modal in (
-            //         select max(modal) from harga_stok group by id_inventaris
-            //     )
-            // ) as most_modal
-            // on inventaris.id = most_modal.id_inventaris');
+         //ini  kalo dijalanke biso, tp katek isi, men dipake ke ->get(), error, cannot call function get() to integer men dak salah
+     
+        $query=DB::select(DB::raw('select * from inventaris join (
+            select * from harga_stok
+            where modal in (
+                select max(modal) from harga_stok group by id_inventaris
+            )
+        ) as most_modal
+        on inventaris.id = most_modal.id_inventaris'));
 
-            $query=Inventaris::join(DB::raw('SELECT * FROM harga_stok WHERE modal = (SELECT MAX(modal) FROM harga_stok GROUP BY id_inventaris) AS most_modal'),'inventaris.id','=','most_modal.id_inventaris')->get();
+            //nah yang dibawah ini error MariaDB near Group bla bla, help plss
+
+            // $query=DB::select(DB::raw('SELECT * FROM harga_stok WHERE modal = (SELECT MAX(modal) FROM harga_stok GROUP BY id_inventaris) AS most_modal'),'inventaris.id','=','most_modal.id_inventaris')->get();
 
         return view('inventaris.test')->with(compact('query'));
     }
