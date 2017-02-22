@@ -82,9 +82,56 @@ class Laratrust
     }
 
     /**
+     * Checks if the user owns the thing
+     * @param  Object $thing
+     * @param  string $foreignKeyName
+     * @return boolean
+     */
+    public function owns($thing, $foreignKeyName = null)
+    {
+        if ($user = $this->user()) {
+            return $user->owns($thing, $foreignKeyName);
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the user has some role and if he owns the thing
+     * @param  string|array $role
+     * @param  Object $thing
+     * @param  array  $options
+     * @return boolean
+     */
+    public function hasRoleAndOwns($role, $thing, $options = [])
+    {
+        if ($user = $this->user()) {
+            return $user->hasRoleAndOwns($role, $thing, $options);
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the user can do something and if he owns the thing
+     * @param  string|array $permission
+     * @param  Object $thing
+     * @param  array  $options
+     * @return boolean
+     */
+    public function canAndOwns($permission, $thing, $options = [])
+    {
+        if ($user = $this->user()) {
+            return $user->canAndOwns($permission, $thing, $options);
+        }
+
+        return false;
+    }
+
+    /**
      * Get the currently authenticated user or null.
      *
-     * @return Illuminate\Auth\UserInterface|null
+     * @return \Illuminate\Auth\UserInterface|null
      */
     public function user()
     {

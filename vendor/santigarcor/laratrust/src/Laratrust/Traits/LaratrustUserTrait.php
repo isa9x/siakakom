@@ -32,6 +32,21 @@ trait LaratrustUserTrait
     }
 
     /**
+     * Tries to return all the cached permissions of the user
+     * and if it can't bring the permissions from the cache,
+     * it would bring them back from the DB
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public function cachedPermissions()
+    {
+        $cacheKey = 'laratrust_permissions_for_user_' . $this->getKey();
+
+        return Cache::remember($cacheKey, Config::get('cache.ttl', 60), function () {
+            return $this->permissions()->get();
+        });
+    }
+
+    /**
      * Many-to-Many relations with Role.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -43,6 +58,21 @@ trait LaratrustUserTrait
             Config::get('laratrust.role_user_table'),
             Config::get('laratrust.user_foreign_key'),
             Config::get('laratrust.role_foreign_key')
+        );
+    }
+
+    /**
+     * Many-to-Many relations with Permission.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany(
+            Config::get('laratrust.permission'),
+            Config::get('laratrust.permission_user_table'),
+            Config::get('laratrust.user_foreign_key'),
+            Config::get('laratrust.permission_foreign_key')
         );
     }
 
@@ -130,12 +160,12 @@ trait LaratrustUserTrait
                 return true;
             }
 
-            foreach ($permission as $permName) {
-                $hasPerm = $this->can($permName);
+            foreach ($permission as $permissionName) {
+                $hasPermission = $this->can($permissionName);
 
-                if ($hasPerm && !$requireAll) {
+                if ($hasPermission && !$requireAll) {
                     return true;
-                } elseif (!$hasPerm && $requireAll) {
+                } elseif (!$hasPermission && $requireAll) {
                     return false;
                 }
             }
@@ -146,8 +176,13 @@ trait LaratrustUserTrait
             return $requireAll;
         }
 
+        foreach ($this->cachedPermissions() as $perm) {
+            if (str_is($permission, $perm->name)) {
+                return true;
+            }
+        }
+
         foreach ($this->cachedRoles() as $role) {
-            // Validate against the Permission table
             foreach ($role->cachedPermissions() as $perm) {
                 if (str_is($permission, $perm->name)) {
                     return true;
@@ -180,22 +215,8 @@ trait LaratrustUserTrait
         }
 
         // Set up default values and validate options.
-        if (!isset($options['validate_all'])) {
-            $options['validate_all'] = false;
-        } else {
-            if ($options['validate_all'] !== true && $options['validate_all'] !== false) {
-                throw new InvalidArgumentException();
-            }
-        }
-        if (!isset($options['return_type'])) {
-            $options['return_type'] = 'boolean';
-        } else {
-            if ($options['return_type'] != 'boolean' &&
-                $options['return_type'] != 'array' &&
-                $options['return_type'] != 'both') {
-                throw new InvalidArgumentException();
-            }
-        }
+        $options = $this->checkOrSetDefaultOption('validate_all', $options, [false, true]);
+        $options = $this->checkOrSetDefaultOption('return_type', $options, ['boolean', 'array', 'both']);
 
         // Loop through roles and permissions and check each.
         $checkedRoles = [];
@@ -235,15 +256,7 @@ trait LaratrustUserTrait
      */
     public function attachRole($role)
     {
-        if (is_object($role)) {
-            $role = $role->getKey();
-        }
-
-        if (is_array($role)) {
-            $role = $role['id'];
-        }
-
-        $this->roles()->attach($role);
+        $this->roles()->attach($this->getIdFor($role));
         $this->flushCache();
 
         return $this;
@@ -257,15 +270,7 @@ trait LaratrustUserTrait
      */
     public function detachRole($role)
     {
-        if (is_object($role)) {
-            $role = $role->getKey();
-        }
-
-        if (is_array($role)) {
-            $role = $role['id'];
-        }
-
-        $this->roles()->detach($role);
+        $this->roles()->detach($this->getIdFor($role));
         $this->flushCache();
 
         return $this;
@@ -319,15 +324,153 @@ trait LaratrustUserTrait
     }
 
     /**
+     * Alias to eloquent many-to-many relation's attach() method.
+     *
+     * @param mixed $permission
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function attachPermission($permission)
+    {
+        $this->permissions()->attach($this->getIdFor($permission));
+        $this->flushCache();
+
+        return $this;
+    }
+
+    /**
+     * Alias to eloquent many-to-many relation's detach() method.
+     *
+     * @param mixed $permission
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function detachPermission($permission)
+    {
+        $this->permissions()->detach($this->getIdFor($permission));
+        $this->flushCache();
+
+        return $this;
+    }
+
+    /**
+     * Attach multiple permissions to a user
+     *
+     * @param mixed $permissions
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function attachPermissions($permissions)
+    {
+        foreach ($permissions as $permission) {
+            $this->attachPermission($permission);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Detach multiple permissions from a user
+     *
+     * @param mixed $permissions
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function detachPermissions($permissions = null)
+    {
+        if (!$permissions) {
+            $permissions = $this->permissions()->get();
+        }
+
+        foreach ($permissions as $permission) {
+            $this->detachPermission($permission);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sync roles to the user
+     * @param  array  $permissions
+     * @return Illuminate\Database\Eloquent\Model
+     */
+    public function syncPermissions($permissions = [])
+    {
+        $this->permissions()->sync($permissions);
+        $this->flushCache();
+
+        return $this;
+    }
+
+    /**
      * Checks if the user owns the thing
-     * @param  Model $thing
+     * @param  Object $thing
+     * @param  string $foreignKeyName
      * @return boolean
      */
-    public function owns($thing)
+    public function owns($thing, $foreignKeyName = null)
     {
-        $foreignKeyName = snake_case(get_class($this). 'Id');
+        if ($thing instanceof \Laratrust\Contracts\Ownable) {
+            $ownerKey = $thing->ownerKey();
+        } else {
+            $className = (new \ReflectionClass($this))->getShortName();
+            $foreignKeyName = $foreignKeyName ?: snake_case($className . 'Id');
+            $ownerKey = $thing->$foreignKeyName;
+        }
 
-        return $thing->$foreignKeyName == $this->getKey();
+        return $ownerKey == $this->getKey();
+    }
+
+    /**
+     * Checks if the user has some role and if he owns the thing
+     * @param  string|array $role
+     * @param  Object $thing
+     * @param  array  $options
+     * @return boolean
+     */
+    public function hasRoleAndOwns($role, $thing, $options = [])
+    {
+        $options = $this->checkOrSetDefaultOption('requireAll', $options, [false, true]);
+        $options['foreignKeyName'] = isset($options['foreignKeyName']) ? $options['foreignKeyName'] : null;
+
+        return $this->hasRole($role, $options['requireAll'])
+                && $this->owns($thing, $options['foreignKeyName']);
+    }
+
+    /**
+     * Checks if the user can do something and if he owns the thing
+     * @param  string|array $permission
+     * @param  Object $thing
+     * @param  array  $options
+     * @return boolean
+     */
+    public function canAndOwns($permission, $thing, $options = [])
+    {
+        $options = $this->checkOrSetDefaultOption('requireAll', $options, [false, true]);
+        $options['foreignKeyName'] = isset($options['foreignKeyName']) ? $options['foreignKeyName'] : null;
+
+        return $this->can($permission, $options['requireAll'])
+                && $this->owns($thing, $options['foreignKeyName']);
+    }
+
+    /**
+     * Checks if the option exists inside the arrayToCheck
+     * if not sets a the first option inside the default
+     * values array
+     * @param  string $option
+     * @param  array $arrayToCheck
+     * @param  array $defaultValues
+     * @return array
+     */
+    protected function checkOrSetDefaultOption($option, $arrayToCheck, $defaultValues)
+    {
+        if (!isset($arrayToCheck[$option])) {
+            $arrayToCheck[$option] = $defaultValues[0];
+
+            return $arrayToCheck;
+        }
+
+        if (!in_array($arrayToCheck[$option], $defaultValues, true)) {
+            throw new InvalidArgumentException();
+        }
+
+        return $arrayToCheck;
     }
 
     /**
@@ -350,5 +493,26 @@ trait LaratrustUserTrait
     public function flushCache()
     {
         Cache::forget('laratrust_roles_for_user_' . $this->getKey());
+        Cache::forget('laratrust_permissions_for_user_' . $this->getKey());
+    }
+
+    /**
+     * Gets the it from an array or object
+     * @param  mixed $object
+     * @return int
+     */
+    private function getIdFor($object)
+    {
+        if (is_object($object)) {
+            return $object->getKey();
+        } elseif (is_array($object)) {
+            return $object['id'];
+        } elseif (is_numeric($object)) {
+            return $object;
+        }
+
+        throw new InvalidArgumentException(
+            'getIdFor function only accepts an integer, a Model object or an array with an "id" key'
+        );
     }
 }

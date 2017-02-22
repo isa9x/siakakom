@@ -5,6 +5,7 @@
 [![Build Status](https://travis-ci.org/santigarcor/laratrust.svg?branch=master)](https://travis-ci.org/santigarcor/laratrust)
 [![Latest Stable Version](https://poser.pugx.org/santigarcor/laratrust/v/stable)](https://packagist.org/packages/santigarcor/laratrust)
 [![Total Downloads](https://poser.pugx.org/santigarcor/laratrust/downloads)](https://packagist.org/packages/santigarcor/laratrust)
+[![Coverage Status](https://coveralls.io/repos/github/santigarcor/laratrust/badge.svg)](https://coveralls.io/github/santigarcor/laratrust)
 [![StyleCI](https://styleci.io/repos/59691202/shield)](https://styleci.io/repos/59691202)
 [![License](https://poser.pugx.org/santigarcor/laratrust/license)](https://packagist.org/packages/santigarcor/laratrust)
 
@@ -18,5 +19,5 @@ Please note that this fork is not used on Zizaco's page at this time, nor is it 
 
 ## Installation, Configuration and Usage
 To install, configure and learn how to use laratrust please go to the [Documentation](http://laratrust.readthedocs.io/).
-
-> Laratrust now supports a groups implementation where roles can be attached to users within a group. It has not been released yet, but if you want to try it out that feature, please go to the dev-master version right [here](http://laratrust.readthedocs.io/en/master/index.html).
+<!--
+> Laratrust now supports a groups implementation where roles can be attached to users within a group. It has not been released yet, but if you want to try it out that feature, please go to the dev-master version right [here](http://laratrust.readthedocs.io/en/master/index.html).-->

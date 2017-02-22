@@ -30,11 +30,12 @@ class LaratrustServiceProvider extends ServiceProvider
      */
     protected $commands = [
         'Migration' => 'command.laratrust.migration',
-        'MakeRole' => 'command.laratrust.make-role',
-        'MakePermission' => 'command.laratrust.make-permission',
+        'MakeRole' => 'command.laratrust.role',
+        'MakePermission' => 'command.laratrust.permission',
         'AddLaratrustUserTraitUse' => 'command.laratrust.add-trait',
         'Setup' => 'command.laratrust.setup',
-        'MakeSeeder' => 'command.laratrust.seeder'
+        'MakeSeeder' => 'command.laratrust.seeder',
+        'Upgrade' => 'command.laratrust.upgrade'
     ];
 
     /**
@@ -47,9 +48,9 @@ class LaratrustServiceProvider extends ServiceProvider
     {
         // Register published configuration.
         $this->publishes([
-            __DIR__.'/../config/config.php' => app()->basePath() . '/config/laratrust.php',
-            __DIR__.'/../config/laratrust_seeder.php' => app()->basePath() . '/config/laratrust_seeder.php',
-        ]);
+            __DIR__.'/../config/config.php' => config_path('laratrust.php'),
+            __DIR__.'/../config/laratrust_seeder.php' => config_path('laratrust_seeder.php'),
+        ], 'laratrust');
 
         if (class_exists('\Blade')) {
             $this->registerBladeDirectives();
@@ -120,14 +121,14 @@ class LaratrustServiceProvider extends ServiceProvider
     
     protected function registerMakeRoleCommand()
     {
-        $this->app->singleton('command.laratrust.make-role', function ($app) {
+        $this->app->singleton('command.laratrust.role', function ($app) {
             return new MakeRoleCommand($app['files']);
         });
     }
     
     protected function registerMakePermissionCommand()
     {
-        $this->app->singleton('command.laratrust.make-permission', function ($app) {
+        $this->app->singleton('command.laratrust.permission', function ($app) {
             return new MakePermissionCommand($app['files']);
         });
     }
@@ -150,6 +151,13 @@ class LaratrustServiceProvider extends ServiceProvider
     {
         $this->app->singleton('command.laratrust.seeder', function () {
             return new MakeSeederCommand();
+        });
+    }
+
+    protected function registerUpgradeCommand()
+    {
+        $this->app->singleton('command.laratrust.upgrade', function () {
+            return new UpgradeCommand();
         });
     }
 

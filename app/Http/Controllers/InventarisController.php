@@ -22,8 +22,8 @@ class InventarisController extends Controller
     public function index(Request $request, Builder $htmlBuilder)
     {
         if($request->ajax()){
-            $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')
-                    ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();;
+            $query = Inventaris::join('harga_stok','inventaris.id','=','harga_stok.id_inventaris')->distinct()
+                    ->join('jenis_barang','inventaris.id_jenis_barang','=','jenis_barang.id')->get();
             
             return Datatables::of($query)
                 ->addColumn('sisa_stok',function($query){

@@ -12,6 +12,7 @@ namespace Laratrust\Traits;
 
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Cache;
+use InvalidArgumentException;
 
 trait LaratrustRoleTrait
 {
@@ -91,15 +92,15 @@ trait LaratrustRoleTrait
     /**
      * Checks if the role has a permission by its name.
      *
-     * @param string|array $name       Permission name or array of permission names.
-     * @param bool         $requireAll All permissions in the array are required.
+     * @param string|array $permission       Permission name or array of permission names.
+     * @param bool         $requireAll       All permissions in the array are required.
      *
      * @return bool
      */
-    public function hasPermission($name, $requireAll = false)
+    public function hasPermission($permission, $requireAll = false)
     {
-        if (is_array($name)) {
-            foreach ($name as $permissionName) {
+        if (is_array($permission)) {
+            foreach ($permission as $permissionName) {
                 $hasPermission = $this->hasPermission($permissionName);
 
                 if ($hasPermission && !$requireAll) {
@@ -115,8 +116,8 @@ trait LaratrustRoleTrait
             return $requireAll;
         }
 
-        foreach ($this->cachedPermissions() as $permission) {
-            if ($permission->name == $name) {
+        foreach ($this->cachedPermissions() as $perm) {
+            if (str_is($permission, $perm->name)) {
                 return true;
             }
         }
@@ -127,17 +128,17 @@ trait LaratrustRoleTrait
     /**
      * Save the inputted permissions.
      *
-     * @param mixed $inputPermissions
+     * @param mixed $permissions
      *
      * @return array
      */
-    public function savePermissions($inputPermissions)
+    public function syncPermissions($permissions)
     {
-        // If the inputPermissions ist empty it will delete all associations
-        $changes = $this->permissions()->sync($inputPermissions);
+        // If the permissions is empty it will delete all associations
+        $changes = $this->permissions()->sync($permissions);
         $this->flushCache();
 
-        return $changes;
+        return $this;
     }
 
     /**
@@ -149,15 +150,7 @@ trait LaratrustRoleTrait
      */
     public function attachPermission($permission)
     {
-        if (is_object($permission)) {
-            $permission = $permission->getKey();
-        }
-
-        if (is_array($permission)) {
-            $permission = $permission['id'];
-        }
-
-        $this->permissions()->attach($permission);
+        $this->permissions()->attach($this->getIdFor($permission));
         $this->flushCache();
 
         return $this;
@@ -172,15 +165,7 @@ trait LaratrustRoleTrait
      */
     public function detachPermission($permission)
     {
-        if (is_object($permission)) {
-            $permission = $permission->getKey();
-        }
-
-        if (is_array($permission)) {
-            $permission = $permission['id'];
-        }
-
-        $this->permissions()->detach($permission);
+        $this->permissions()->detach($this->getIdFor($permission));
         $this->flushCache();
 
         return $this;
@@ -209,8 +194,12 @@ trait LaratrustRoleTrait
      *
      * @return void
      */
-    public function detachPermissions($permissions)
+    public function detachPermissions($permissions = null)
     {
+        if (!$permissions) {
+            $permissions = $this->permissions()->get();
+        }
+
         foreach ($permissions as $permission) {
             $this->detachPermission($permission);
         }
@@ -225,5 +214,24 @@ trait LaratrustRoleTrait
     public function flushCache()
     {
         Cache::forget('laratrust_permissions_for_role_' . $this->getKey());
+    }
+
+    /**
+     * @param $permission
+     * @return mixed
+     */
+    private function getIdFor($permission)
+    {
+        if (is_object($permission)) {
+            return $permission->getKey();
+        } elseif (is_numeric($permission)) {
+            return $permission;
+        } elseif (is_array($permission)) {
+            return $permission['id'];
+        }
+
+        throw new InvalidArgumentException(
+            'getIdFor function only accepts an integer, a Model object or an array with an "id" key'
+        );
     }
 }
