@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateJenisBarangTable extends Migration
+class CreateMetodePembayaranTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,10 @@ class CreateJenisBarangTable extends Migration
      */
     public function up()
     {
-        Schema::create('jenis_barang', function (Blueprint $table) {
+        Schema::create('metode_pembayaran', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('jenis_barang');
+            $table->string('metode_pembayaran');
+            $table->unsignedinteger('saldo');
             $table->timestamps();
         });
     }
@@ -27,6 +28,6 @@ class CreateJenisBarangTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jenis_barang');
+        Schema::dropIfExists('metode_pembayaran');
     }
 }

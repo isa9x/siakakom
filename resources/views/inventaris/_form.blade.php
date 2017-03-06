@@ -11,7 +11,7 @@
 	{!! Form::label('id_jenis', 'Jenis Barang', ['class'=>'col-md-2 control-label']) !!}
 	
 	<div class="col-md-4">
-		{!! Form::select('id_jenis_barang', App\JenisBarang::pluck('jenis','id'),null,['class'=>'form-control js-selectize'])!!}
+		{!! Form::select('id_jenis_barang', App\JenisBarang::pluck('jenis_barang','id'),null,['class'=>'form-control js-selectize'])!!}
 		{!! $errors->first('id_jenis_barang', '<p class="help-block">:message</p>') !!}
 	</div>
 </div>

@@ -16,6 +16,8 @@ class CreatePendapatanJasaTable extends Migration
         Schema::create('pendapatan_jasa', function (Blueprint $table) {
             $table->increments('id');
             $table->date('tanggal_pendapatan');
+            $table->unsignedinteger('id_jenis_pembayaran');
+            $table->unsignedinteger('id_metode_pembayaran');
             $table->integer('harga_modal');
             $table->integer('harga_jual');
             $table->unsignedinteger('laba');

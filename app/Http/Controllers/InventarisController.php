@@ -39,7 +39,7 @@ class InventarisController extends Controller
 
         $html = $htmlBuilder
             ->addColumn(['data'=>'nama','name'=>'nama', 'title'=>'Nama'])
-            ->addColumn(['data'=>'jenis','name'=>'jenis','title'=>'Jenis Barang'])
+            ->addColumn(['data'=>'jenis_barang','name'=>'jenis_barang','title'=>'Jenis Barang'])
             ->addColumn(['data'=>'modal','name'=>'modal','title'=>'Harga Modal'])
             ->addColumn(['data'=>'jual','name'=>'jual','title'=>'Harga Jual'])
             ->addColumn(['data'=>'sisa_stok','name'=>'sisa_stok','title'=>'Stok Tersedia'])

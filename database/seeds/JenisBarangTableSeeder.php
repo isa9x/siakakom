@@ -13,10 +13,10 @@ class JenisBarangTableSeeder extends Seeder
     {
         //seeder jenis barang
         $jenis_barang=[
-        	['jenis'=>'ATK'],
-        	['jenis'=>'Accessories'],
-        	['jenis'=>'Hardware'],
-        	['jenis'=>'Software']
+        	['jenis_barang'=>'ATK'],
+        	['jenis_barang'=>'Accessories'],
+        	['jenis_barang'=>'Hardware'],
+        	['jenis_barang'=>'Software']
         ];
 
         DB::table('jenis_barang')->insert($jenis_barang);

@@ -8,6 +8,8 @@ class JenisBarang extends Model
 {
      protected $table = 'jenis_barang';
 
+     protected $fillable =['jenis_barang'];
+
      public function inventaris(){
 		return $this->belongsTo('App\Inventaris');
 	}
