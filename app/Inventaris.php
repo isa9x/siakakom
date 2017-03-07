@@ -14,10 +14,10 @@ class Inventaris extends Model
 
     public function jenisBarang()
 	{
-		return $this->hasOne('App\JenisBarang');
+		return $this->hasOne('App\JenisBarang','id');
 	}
 
-	public function hargaStok(){
-		return $this->hasMany('App\HargaStok');
-	}
+	// public function hargaStok(){
+	// 	return $this->hasMany('App\HargaStok','id_inventaris');
+	//}
 }

@@ -2,5 +2,5 @@
 @section('content')
 	{{$barang->nama}}
 	<br>
-	{{$barang->hargaStok->jual}}
+	{{$barang->jenisBarang->jenis_barang}}
 @endsection

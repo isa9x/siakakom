@@ -11,6 +11,6 @@ class JenisBarang extends Model
      protected $fillable =['jenis_barang'];
 
      public function inventaris(){
-		return $this->belongsTo('App\Inventaris');
+		return $this->belongsTo('App\Inventaris','id_jenis_barang');
 	}
 }
