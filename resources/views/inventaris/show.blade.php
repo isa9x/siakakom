@@ -3,4 +3,6 @@
 	{{$barang->nama}}
 	<br>
 	{{$barang->jenisBarang->jenis_barang}}
+	<br>
+	{{-- {{$barang->hargaStok->stok}} --}}
 @endsection
