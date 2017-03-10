@@ -14,5 +14,6 @@ class HargaStok extends Model
 
     public function inventaris(){
 		return $this->belongsTo('App\Inventaris','id');
+		//return $this->hasOne('App\Inventaris','id');
 	}
 }

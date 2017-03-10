@@ -19,5 +19,6 @@ class Inventaris extends Model
 
 	public function hargaStok(){
 		return $this->hasMany('App\HargaStok','id_inventaris');
+		//return $this->belongsTo('App\HargaStok','id_inventaris');
 	}
 }

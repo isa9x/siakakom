@@ -4,5 +4,7 @@
 	<br>
 	{{$barang->jenisBarang->jenis_barang}}
 	<br>
-	{{-- {{$barang->hargaStok->stok}} --}}
+	@foreach($barang->hargaStok as $hargaStok)
+		Modal = {{$hargaStok->modal}}
+	@endforeach
 @endsection
