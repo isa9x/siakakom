@@ -108,7 +108,8 @@ class InventarisController extends Controller
     public function show($id)
     {
         $barang=Inventaris::findOrFail($id);
-        return view('inventaris.show',compact('barang'));
+        $span=$barang->hargaStok->count();
+        return view('inventaris.show',compact(['barang','span']));
     }
 
     /**
