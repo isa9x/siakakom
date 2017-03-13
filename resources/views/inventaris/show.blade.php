@@ -8,16 +8,21 @@
 			<th>Jenis Barang</th>
 			<th>Harga Modal</th>
 			<th>Harga Jual</th>
+			<th>Stok Awal</th>
 			<th>Terjual</th>
 			<th>Sisa Stok</th>
 		</tr>
 		<tr>
 			<td rowspan='{{$span}}'>{{$barang->nama}}</td>
 			<td rowspan='{{$span}}'>{{$barang->jenisBarang->jenis_barang}}</td>
+			@foreach($barang->hargaStok as $hargaStok)
+				<td> {{$hargaStok->modal}} </td>
+				<td> {{$hargaStok->jual}} </td>
+				<td> {{$hargaStok->stok}} </td>
+				<td> {{$hargaStok->terjual}} </td>
+				<td> {{$hargaStok->stok - $hargaStok->terjual}} </td>
 		</tr>
-				@foreach($barang->hargaStok as $hargaStok)
-					<tr> <td rowspan='{{$span}}'> {{$hargaStok->modal}} </td> </tr>
-				@endforeach
+			@endforeach
 	</table>
 </div>
 {{-- {{$barang->nama}}
